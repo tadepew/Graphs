@@ -98,6 +98,7 @@ class Graph:
                     verts_to_visit.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
+        # DFT: traverse down to the bottom then back up
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
@@ -133,6 +134,7 @@ class Graph:
         # Hint: keep track of "path so far" to verticies
         # if we start at 1, the path so far would be 1 followed by 2
         # add onto path
+        # BF processes closest vertices first and then moves outwards away from center point
 
         # queue with verts to visit
         verts_to_visit = Queue()
@@ -248,16 +250,13 @@ class Graph:
         verts_visited = set()
         # helper function for recursion
 
-        def dfs_helper(starting_vertex, destination_vertex, current_path):
-
+        def dfs_helper(starting_vertex, destination_vertex, current_path=None):
+            if current_path is None:
+                current_path = []
             # start search
             if starting_vertex not in verts_visited:
 
                 verts_visited.add(starting_vertex)
-
-                # stop recursion when vertex_found = True
-                # if vertex_found:
-                #     return
 
                 if starting_vertex == destination_vertex:
                     # copy current path so far
@@ -275,11 +274,10 @@ class Graph:
 
         verts_visited = set()
 
-        # vertex_found = False
-
+        # hashtable for path
         to_return = {}
 
-        dfs_helper(starting_vertex, destination_vertex, [])
+        dfs_helper(starting_vertex, destination_vertex)
         return to_return[destination_vertex]
 
 #   1 2 3 4 5 6 7
