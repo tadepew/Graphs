@@ -15,13 +15,13 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        self.vertices[vertex_id] = set()
+        self.vertices[vertex_id] = set()  # set of edges from this vert
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        self.vertices[v1].add(v2)
+        self.vertices[v1].add(v2)  # add v2 as a neighbor to v1
 
     def get_neighbors(self, vertex_id):
         """
@@ -35,8 +35,9 @@ class Graph:
         beginning from starting_vertex.
         """
         # initialize a queue (fifo)
-        # BFT processes closest vertices first and then moves outwards away from start
+        # BFT processes closest vertices first and then moves outwards away from center point
         # THEREFORE, you want to query (queue) oldest element based on the order they were inserted since it is first-in-first-out
+        # Enqueue all immediate neighbors and they get to go first in order
         verts_to_visit = Queue()
 
         # enqueue first vert
@@ -67,7 +68,10 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        # a DFS explores as far as possible along each branch first and then bracktracks. For this, a stack works better since it is LIFO(last-in-first-out)
+        # a DFS explores as far as possible along each branch first and then bracktracks.
+        # Backtracking can only be done with a stack since it is LIFO(last-in-first-out) go to end--->reach node<---- backtrack
+        # Person in line last gets out first
+        # Gets all neighbors before moving on to next node
         # create a lifo stack
         verts_to_visit = Stack()
 
@@ -89,7 +93,7 @@ class Graph:
                 # mark as visited
                 verts_visited.add(current_vertex)
 
-                # push all neighbors on the stack
+                # push all neighbors onto the stack
                 for neighbor in self.get_neighbors(current_vertex):
                     verts_to_visit.push(neighbor)
 
@@ -101,16 +105,21 @@ class Graph:
         This should be done using recursion.
         """
 
+        # helper function to recursively traverse
         def dft_helper(starting_vertex):
 
+            # print starting vertex then add to visited
             if starting_vertex not in verts_visited:
                 print(starting_vertex)
 
                 verts_visited.add(starting_vertex)
 
+                # get neighbors and recursively call dft_helper on neighbors
+
                 for neighbor in self.get_neighbors(starting_vertex):
                     dft_helper(neighbor)
 
+        # make an empty set at first
         verts_visited = set()
 
         dft_helper(starting_vertex)
@@ -121,34 +130,56 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
+        # Hint: keep track of "path so far" to verticies
+        # if we start at 1, the path so far would be 1 followed by 2
+        # add onto path
+
+        # queue with verts to visit
         verts_to_visit = Queue()
+
         # initalize with starting vertex
         verts_to_visit.enqueue(starting_vertex)
 
-        # hashtable for paths to verticies
+        # hashtable for verts traversed
         paths_to_verts = {}
+        # empty list which will contain the ordered path for verts
         paths_to_verts[starting_vertex] = []
 
+        # set to store verts already visited
         verts_visited = set()
 
         while verts_to_visit.size() > 0:
 
+            # first in first out
             current_vertex = verts_to_visit.dequeue()
 
             if current_vertex not in verts_visited:
+
+                # add to visited
                 verts_visited.add(current_vertex)
 
+                # iterate through each neighbor of current vertex
                 for neighbor in self.get_neighbors(current_vertex):
+                    # if neighbor is the destination vertex that is the final path
                     if neighbor == destination_vertex:
+                        # final path is a copy of path so far
                         final_path = paths_to_verts[current_vertex][:]
+                        # append current vertex
                         final_path.append(current_vertex)
+                        # append neighbor
                         final_path.append(neighbor)
+                        # return final (shortest) path
                         return final_path
+
+                    # enqueue neighbor to continue finding the shortest path
                     verts_to_visit.enqueue(neighbor)
 
+                    # copy path so far
                     copy_path = paths_to_verts[current_vertex][:]
+                    # append current vertex
                     copy_path.append(current_vertex)
 
+                    # path so far for neighbor is the copy path
                     paths_to_verts[neighbor] = copy_path
 
         print("Vertex not found")
@@ -160,7 +191,50 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        # make a stack
+        verts_to_visit = Stack()
+
+        verts_to_visit.push(starting_vertex)
+
+        # hashtable keeps track of visited verts and their path from starting_index
+        paths_to_verts = {}
+        paths_to_verts[starting_vertex] = []
+
+        verts_visited = set()
+
+        while verts_to_visit.size() > 0:
+            # current vertex is next vertex in stack
+            current_vertex = verts_to_visit.pop()
+
+            if current_vertex not in verts_visited:
+
+                # add to visited
+                verts_visited.add(current_vertex)
+
+                # iterate through all neighbors of current vertex
+                for neighbor in self.get_neighbors(current_vertex):
+                    # if neighbor is the final destination, return path
+                    if neighbor == destination_vertex:
+                        # shallow copy [:] paths of verticies up to parent
+                        final_path = paths_to_verts[current_vertex][:]
+                        # append current vertex and neighobr
+                        final_path.append(current_vertex)
+                        final_path.append(neighbor)
+                        return final_path
+
+                    # add neighbors to stack if not destination
+                    verts_to_visit.push(neighbor)
+
+                    # copy path so far
+                    copy_path = paths_to_verts[current_vertex][:]
+                    # add current vertex
+                    copy_path.append(current_vertex)
+
+                    # store to hashtable
+                    paths_to_verts[neighbor] = copy_path
+
+        print("Vertex not found")
+        return
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -170,7 +244,52 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+
+        verts_visited = set()
+        # helper function for recursion
+
+        def dfs_helper(starting_vertex, destination_vertex, current_path):
+
+            # start search
+            if starting_vertex not in verts_visited:
+
+                verts_visited.add(starting_vertex)
+
+                # stop recursion when vertex_found = True
+                # if vertex_found:
+                #     return
+
+                if starting_vertex == destination_vertex:
+                    # copy current path so far
+                    final_path = current_path[:]
+                    # append starting vertex
+                    final_path.append(starting_vertex)
+
+                    to_return[destination_vertex] = final_path
+
+                else:
+                    for neighbor in self.get_neighbors(starting_vertex):
+                        new_path = current_path[:]
+                        new_path.append(starting_vertex)
+                        dfs_helper(neighbor, destination_vertex, new_path)
+
+        verts_visited = set()
+
+        # vertex_found = False
+
+        to_return = {}
+
+        dfs_helper(starting_vertex, destination_vertex, [])
+        return to_return[destination_vertex]
+
+#   1 2 3 4 5 6 7
+# 1   1
+# 2     1 1
+# 3         1
+# 4           1 1
+# 5     1
+# 6     1
+# 7 1         1
 
 
 if __name__ == '__main__':
