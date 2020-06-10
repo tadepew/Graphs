@@ -217,7 +217,7 @@ class Graph:
                 for neighbor in self.get_neighbors(current_vertex):
                     # if neighbor is the final destination, return path
                     if neighbor == destination_vertex:
-                        # shallow copy [*list] paths of verticies up to parent
+                        # shallow copy [:] or [*list] paths of verticies up to parent
                         final_path = [*paths_to_verts[current_vertex]]
                         # append current vertex and neighobr
                         final_path.append(current_vertex)
