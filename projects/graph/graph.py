@@ -232,7 +232,7 @@ class Graph:
                     # add current vertex
                     copy_path.append(current_vertex)
 
-                    # store to hashtable
+                    # store to dict
                     paths_to_verts[neighbor] = copy_path
 
         print("Vertex not found")
@@ -274,7 +274,7 @@ class Graph:
 
         verts_visited = set()
 
-        # hashtable for path
+        # dict for path
         to_return = {}
 
         dfs_helper(starting_vertex, destination_vertex)
