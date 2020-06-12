@@ -142,6 +142,7 @@ def maze_traversal(player):
     # push current room onto stack
     rooms_to_visit.push(player.current_room)
 
+    # store a previous room variable so that we can backtrack, assign variable after loop in algorithm
     previous_room = None
 
     while rooms_to_visit.size() > 0:
@@ -149,6 +150,7 @@ def maze_traversal(player):
         # pop off current room
         current_room = rooms_to_visit.pop()
 
+        # hasn't been visited yet
         if current_room.id not in rooms_visited:
 
             # make sure you can move to room
@@ -160,9 +162,12 @@ def maze_traversal(player):
                 # loop through exits from previous room to get to new room
                 for room_exit in previous_room.get_exits():
 
+                    # get_room_in_direction gets the actual room rather than the exit direction
+
                     connecting_room = previous_room.get_room_in_direction(
                         room_exit)
 
+                    # if the room exit for the previous room (connecting) is the same as the current room
                     if connecting_room.id == current_room.id:
                         can_move = True
                         # exit_to_use = room_exit
