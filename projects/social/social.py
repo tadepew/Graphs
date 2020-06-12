@@ -64,7 +64,6 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # if avg_friendships >= num_users:
         #     print("Average friendships cannot be greater than users")
@@ -90,6 +89,7 @@ class SocialGraph:
                 collisions += 1
 
             # print(f"COLLISIONS: {collisions}")
+            # print(f"FRIENDSHIPS: {total_friendships}")
 
             # while user_id == friend_id:
             #     friend_id = random.randint(1, self.last_id)
