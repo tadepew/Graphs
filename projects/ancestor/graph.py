@@ -217,7 +217,7 @@ class Graph:
                 for neighbor in self.get_neighbors(current_vertex):
                     # if neighbor is the final destination, return path
                     if neighbor == destination_vertex:
-                        # shallow copy [*list] paths of verticies up to parent
+                        # shallow copy [:] or [*list] paths of verticies up to parent
                         final_path = [*paths_to_verts[current_vertex]]
                         # append current vertex and neighobr
                         final_path.append(current_vertex)
@@ -232,7 +232,7 @@ class Graph:
                     # add current vertex
                     copy_path.append(current_vertex)
 
-                    # store to dict
+                    # store to hashtable
                     paths_to_verts[neighbor] = copy_path
 
         print("Vertex not found")
@@ -274,7 +274,7 @@ class Graph:
 
         verts_visited = set()
 
-        # dict for path
+        # hashtable for path
         to_return = {}
 
         dfs_helper(starting_vertex, destination_vertex)
